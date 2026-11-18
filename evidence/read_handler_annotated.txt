@@ -1,0 +1,136 @@
+binary : prog_firehose_ddr.elf (not redistributed; see sha256)
+sha256 : 31ad5664023af3f9022913272e2c180fde5f658f31c9094ae9ec57c128c59086
+size   : 295636 bytes
+match  : exact
+build  : Jul 22 2025
+
+read handler: sub sp,sp,#0x160 ; add x29,sp,#0x110  (frame 0x160)
+
+== entry: flag1-or-ModeType5 gate, cookie load ==
+  0x149a41a4   ff8305d1  sub       sp, sp, #0x160
+  0x149a41a8   fd7b11a9  stp       x29, x30, [sp, #0x110]
+  0x149a41ac   fc9300f9  str       x28, [sp, #0x120]
+  0x149a41b0   f85f13a9  stp       x24, x23, [sp, #0x130]
+  0x149a41b4   f65714a9  stp       x22, x21, [sp, #0x140]
+  0x149a41b8   f44f15a9  stp       x20, x19, [sp, #0x150]
+  0x149a41bc   fd430491  add       x29, sp, #0x110
+  0x149a41c0   c80100d0  adrp      x8, #0x149de000
+  0x149a41c4   d4028052  mov       w20, #0x16
+  0x149a41c8   f50300aa  mov       x21, x0
+  0x149a41cc   1420a172  movk      w20, #0x900, lsl #16
+  0x149a41d0   08ad41f9  ldr       x8, [x8, #0x358]
+  0x149a41d4   a8831ff8  stur      x8, [x29, #-8]
+  0x149a41d8   ff1b00b9  str       wzr, [sp, #0x18]
+  0x149a41dc   7a1a0094  bl        #0x149aabc4
+  0x149a41e0   38d635f0  adrp      x24, #0x8046b000
+  0x149a41e4   1f1c0072  tst       w0, #0xff
+  0x149a41e8   21010054  b.ne      #0x149a420c
+  0x149a41ec   08df45f9  ldr       x8, [x24, #0xbb8]
+  0x149a41f0   1f1500f1  cmp       x8, #5
+  0x149a41f4   c0000054  b.eq      #0x149a420c
+
+== rx open, attribute parse, block-IO handle lookup ==
+  0x149a420c   e0230091  add       x0, sp, #8
+  0x149a4210   21008052  mov       w1, #1
+  0x149a4214   98190094  bl        #0x149aa874
+  0x149a4218   60000034  cbz       w0, #0x149a4224
+  0x149a421c   94160011  add       w20, w20, #5
+  0x149a4220   27000014  b         #0x149a42bc
+  0x149a4224   e1730091  add       x1, sp, #0x1c
+  0x149a4228   e00315aa  mov       x0, x21
+  0x149a422c   2c1e0094  bl        #0x149abadc
+  0x149a4230   80000034  cbz       w0, #0x149a4240
+  0x149a4234   f603002a  mov       w22, w0
+  0x149a4238   f3031faa  mov       x19, xzr
+  0x149a423c   10000014  b         #0x149a427c
+  0x149a4240   e0874329  ldp       w0, w1, [sp, #0x1c]
+  0x149a4244   e3630091  add       x3, sp, #0x18
+  0x149a4248   e22740b9  ldr       w2, [sp, #0x24]
+  0x149a424c   d6180094  bl        #0x149aa5a4
+  0x149a4250   f30300aa  mov       x19, x0
+  0x149a4254   200100b4  cbz       x0, #0x149a4278
+  0x149a4258   e31f40b9  ldr       w3, [sp, #0x1c]
+  0x149a425c   e2a30091  add       x2, sp, #0x28
+  0x149a4260   e00313aa  mov       x0, x19
+  0x149a4264   e10315aa  mov       x1, x21
+  0x149a4268   1c040094  bl        #0x149a52d8
+  0x149a426c   20040034  cbz       w0, #0x149a42f0
+
+== auth_type != 1 -> fall through to the label copy ==
+  0x149a42f0   ff7f04a9  stp       xzr, xzr, [sp, #0x40]
+  0x149a42f4   441a0094  bl        #0x149aac04
+  0x149a42f8   1f040071  cmp       w0, #1
+  0x149a42fc   01020054  b.ne      #0x149a433c
+  0x149a4300   81010090  adrp      x1, #0x149d4000
+  0x149a4304   21081291  add       x1, x1, #0x482
+  0x149a4308   80008052  mov       w0, #4
+  0x149a430c   0f0d0094  bl        #0x149a7748
+  0x149a4310   e0031f2a  mov       w0, wzr
+  0x149a4314   21008052  mov       w1, #1
+  0x149a4318   81180094  bl        #0x149aa51c
+  0x149a431c   a0faff35  cbnz      w0, #0x149a4270
+  0x149a4320   860d0094  bl        #0x149a7938
+  0x149a4324   e1a30091  add       x1, sp, #0x28
+  0x149a4328   e2230091  add       x2, sp, #8
+  0x149a432c   e3630091  add       x3, sp, #0x18
+  0x149a4330   e00313aa  mov       x0, x19
+  0x149a4334   87040094  bl        #0x149a5550
+  0x149a4338   ceffff17  b         #0x149a4270
+
+== VULNERABLE COPY: size = strlen(host label) + 1 ==
+  0x149a433c   81010090  adrp      x1, #0x149d4000
+  0x149a4340   21cc0191  add       x1, x1, #0x73
+  0x149a4344   e00315aa  mov       x0, x21
+  0x149a4348   3d150094  bl        #0x149a983c
+  0x149a434c   200400b4  cbz       x0, #0x149a43d0
+  0x149a4350   f50300aa  mov       x21, x0
+  0x149a4354   9bdbff97  bl        #0x1499b1c0
+  0x149a4358   c00300b4  cbz       x0, #0x149a43d0
+  0x149a435c   80010090  adrp      x0, #0x149d4000
+  0x149a4360   00cc0191  add       x0, x0, #0x73
+  0x149a4364   97dbff97  bl        #0x1499b1c0
+  0x149a4368   1f1c01f1  cmp       x0, #0x47
+  0x149a436c   28040054  b.hi      #0x149a43f0
+  0x149a4370   e00315aa  mov       x0, x21
+  0x149a4374   93dbff97  bl        #0x1499b1c0
+  0x149a4378   01040091  add       x1, x0, #1
+  0x149a437c   620100f0  adrp      x2, #0x149d3000
+  0x149a4380   42341091  add       x2, x2, #0x40d
+  0x149a4384   a04301d1  sub       x0, x29, #0x50
+  0x149a4388   e30315aa  mov       x3, x21
+  0x149a438c   73dbff97  bl        #0x1499b158
+  0x149a4390   1d1a0094  bl        #0x149aac04
+
+== the intended bound (0x48) — unreachable, cmp uses the literal ==
+  0x149a43f0   81010090  adrp      x1, #0x149d4000
+  0x149a43f4   218c1291  add       x1, x1, #0x4a3
+  0x149a43f8   40008052  mov       w0, #2
+  0x149a43fc   e20315aa  mov       x2, x21
+  0x149a4400   03098052  mov       w3, #0x48
+  0x149a4404   d10c0094  bl        #0x149a7748
+  0x149a4408   964e0011  add       w22, w20, #0x13
+  0x149a440c   9cffff17  b         #0x149a427c
+
+== cookie check + epilogue (ldp x29,x30 ; ret) ==
+  0x149a42bc   c90100d0  adrp      x9, #0x149de000
+  0x149a42c0   a8835ff8  ldur      x8, [x29, #-8]
+  0x149a42c4   29ad41f9  ldr       x9, [x9, #0x358]
+  0x149a42c8   3f0108eb  cmp       x9, x8
+  0x149a42cc   e1190054  b.ne      #0x149a4608
+  0x149a42d0   e003142a  mov       w0, w20
+  0x149a42d4   fc9340f9  ldr       x28, [sp, #0x120]
+  0x149a42d8   f44f55a9  ldp       x20, x19, [sp, #0x150]
+  0x149a42dc   f65754a9  ldp       x22, x21, [sp, #0x140]
+  0x149a42e0   f85f53a9  ldp       x24, x23, [sp, #0x130]
+  0x149a42e4   fd7b51a9  ldp       x29, x30, [sp, #0x110]
+  0x149a42e8   ff830591  add       sp, sp, #0x160
+  0x149a42ec   c0035fd6  ret       
+
+== non-returning spin loop reached on cookie mismatch ==
+  0x149a006c   ff4300d1  sub       sp, sp, #0x10
+  0x149a0070   28008052  mov       w8, #1
+  0x149a0074   e80f00b9  str       w8, [sp, #0xc]
+  0x149a0078   e80f40b9  ldr       w8, [sp, #0xc]
+  0x149a007c   e8ffff35  cbnz      w8, #0x149a0078
+  0x149a0080   ff430091  add       sp, sp, #0x10
+  0x149a0084   c0035fd6  ret       

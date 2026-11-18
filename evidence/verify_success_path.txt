@@ -1,0 +1,81 @@
+binary : prog_firehose_ddr.elf (not redistributed; see sha256)
+sha256 : 31ad5664023af3f9022913272e2c180fde5f658f31c9094ae9ec57c128c59086
+size   : 295636 bytes
+match  : exact
+build  : Jul 22 2025
+
+OSIG <verify>: the only path that sets flag1
+
+  0x149a324c  verify handler        (requires 0x8045d77c == 1, set by getsigndata)
+  0x149a32a8  flag1 getter
+  0x149a3290  bl 0x149a2b64         (receive 0x1000 bytes, then RSA)
+  0x149a2c10  mov w0,#1
+  0x149a2c14  bl 0x149aabd0         -> sets [0x8046bbc0] = 1
+
+  0x149a2bb8   e00340f9  ldr       x0, [sp]
+  0x149a2bbc   01008252  mov       w1, #0x1000
+  0x149a2bc0   c00d0094  bl        #0x149a62c0
+  0x149a2bc4   1f0440f1  cmp       x0, #1, lsl #12
+  0x149a2bc8   41010054  b.ne      #0x149a2bf0
+  0x149a2bcc   e00340f9  ldr       x0, [sp]
+  0x149a2bd0   01208052  mov       w1, #0x100
+  0x149a2bd4   4effff97  bl        #0x149a290c
+  0x149a2bd8   f303002a  mov       w19, w0
+  0x149a2bdc   a0010034  cbz       w0, #0x149a2c10
+  0x149a2be0   810100b0  adrp      x1, #0x149d3000
+  0x149a2be4   21202191  add       x1, x1, #0x848
+  0x149a2be8   40008052  mov       w0, #2
+  0x149a2bec   13000014  b         #0x149a2c38
+  0x149a2bf0   810100b0  adrp      x1, #0x149d3000
+  0x149a2bf4   21882291  add       x1, x1, #0x8a2
+  0x149a2bf8   40008052  mov       w0, #2
+  0x149a2bfc   02008252  mov       w2, #0x1000
+  0x149a2c00   93038052  mov       w19, #0x1c
+  0x149a2c04   1320a172  movk      w19, #0x900, lsl #16
+  0x149a2c08   d0120094  bl        #0x149a7748
+  0x149a2c0c   0d000014  b         #0x149a2c40
+  0x149a2c10   20008052  mov       w0, #1
+  0x149a2c14   ef1f0094  bl        #0x149aabd0
+  0x149a2c18   e10340f9  ldr       x1, [sp]
+  0x149a2c1c   c0d535f0  adrp      x0, #0x8045d000
+  0x149a2c20   00f01991  add       x0, x0, #0x67c
+  0x149a2c24   02208052  mov       w2, #0x100
+  0x149a2c28   dae1ff97  bl        #0x1499b390
+  0x149a2c2c   810100b0  adrp      x1, #0x149d3000
+  0x149a2c30   21482291  add       x1, x1, #0x892
+  0x149a2c34   80008052  mov       w0, #4
+  0x149a2c38   c2058052  mov       w2, #0x2e
+
+receiving side (0x149a2b64 -> 0x149a2bdc):
+  0x149a2b64   ffc300d1  sub       sp, sp, #0x30
+  0x149a2b68   fd7b01a9  stp       x29, x30, [sp, #0x10]
+  0x149a2b6c   f31300f9  str       x19, [sp, #0x20]
+  0x149a2b70   fd430091  add       x29, sp, #0x10
+  0x149a2b74   e0030091  mov       x0, sp
+  0x149a2b78   21008052  mov       w1, #1
+  0x149a2b7c   3e1f0094  bl        #0x149aa874
+  0x149a2b80   f303002a  mov       w19, w0
+  0x149a2b84   40060035  cbnz      w0, #0x149a2c4c
+  0x149a2b88   e20740f9  ldr       x2, [sp, #8]
+  0x149a2b8c   5ffc3ff1  cmp       x2, #0xfff
+  0x149a2b90   48010054  b.hi      #0x149a2bb8
+  0x149a2b94   810100b0  adrp      x1, #0x149d3000
+  0x149a2b98   21602191  add       x1, x1, #0x858
+  0x149a2b9c   40008052  mov       w0, #2
+  0x149a2ba0   03008252  mov       w3, #0x1000
+  0x149a2ba4   e9120094  bl        #0x149a7748
+  0x149a2ba8   88038052  mov       w8, #0x1c
+  0x149a2bac   0820a172  movk      w8, #0x900, lsl #16
+  0x149a2bb0   13950011  add       w19, w8, #0x25
+  0x149a2bb4   23000014  b         #0x149a2c40
+  0x149a2bb8   e00340f9  ldr       x0, [sp]
+  0x149a2bbc   01008252  mov       w1, #0x1000
+  0x149a2bc0   c00d0094  bl        #0x149a62c0
+  0x149a2bc4   1f0440f1  cmp       x0, #1, lsl #12
+  0x149a2bc8   41010054  b.ne      #0x149a2bf0
+  0x149a2bcc   e00340f9  ldr       x0, [sp]
+  0x149a2bd0   01208052  mov       w1, #0x100
+  0x149a2bd4   4effff97  bl        #0x149a290c
+  0x149a2bd8   f303002a  mov       w19, w0
+  0x149a2bdc   a0010034  cbz       w0, #0x149a2c10
+  0x149a2be0   810100b0  adrp      x1, #0x149d3000

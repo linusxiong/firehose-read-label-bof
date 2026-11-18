@@ -1,0 +1,66 @@
+binary : prog_firehose_ddr.elf (not redistributed; see sha256)
+sha256 : 31ad5664023af3f9022913272e2c180fde5f658f31c9094ae9ec57c128c59086
+size   : 295636 bytes
+match  : exact
+build  : Jul 22 2025
+
+Runtime flags consulted by the write gate
+
+  flag1        0x8046bbc0  1 byte   -> only writer is 0x149aabd0
+  flag3        0x149de648  1 byte   -> .data gate, set by <configure EnableFlash=1>
+  ModeType     0x8046bbb8  8 bytes  -> read/gethealthinfo accept ModeType==5
+  auth_type    0x8046bbc4  4 bytes  -> 1=intranet 2=internet, set on verify success
+  EnableFlash  0x8046bbe0  1 byte
+
+== flag1_getter == 
+  0x149aabc4   08d635b0  adrp      x8, #0x8046b000
+  0x149aabc8   00016f39  ldrb      w0, [x8, #0xbc0]
+  0x149aabcc   c0035fd6  ret       
+
+== flag1_setter == 
+  0x149aabd0   1f000071  cmp       w0, #0
+  0x149aabd4   08d635b0  adrp      x8, #0x8046b000
+  0x149aabd8   e9079f1a  cset      w9, ne
+  0x149aabdc   09012f39  strb      w9, [x8, #0xbc0]
+  0x149aabe0   c0035fd6  ret       
+
+== flag3_getter == 
+  0x149aabe4   a8010090  adrp      x8, #0x149de000
+  0x149aabe8   00215939  ldrb      w0, [x8, #0x648]
+  0x149aabec   c0035fd6  ret       
+
+== flag3_setter == 
+  0x149aabf0   1f000071  cmp       w0, #0
+  0x149aabf4   a8010090  adrp      x8, #0x149de000
+  0x149aabf8   e9079f1a  cset      w9, ne
+  0x149aabfc   09211939  strb      w9, [x8, #0x648]
+  0x149aac00   c0035fd6  ret       
+
+== enableflash_set == 
+  0x149aaca4   e803002a  mov       w8, w0
+  0x149aaca8   09d635b0  adrp      x9, #0x8046b000
+  0x149aacac   e0031f2a  mov       w0, wzr
+  0x149aacb0   28812f39  strb      w8, [x9, #0xbe0]
+  0x149aacb4   c0035fd6  ret       
+
+== enableflash_get == 
+  0x149aacb8   08d635b0  adrp      x8, #0x8046b000
+  0x149aacbc   00816f39  ldrb      w0, [x8, #0xbe0]
+
+== auth_type_set == 
+  0x149aac10   08d635b0  adrp      x8, #0x8046b000
+  0x149aac14   00c50bb9  str       w0, [x8, #0xbc4]
+  0x149aac18   c0035fd6  ret       
+
+== canary_seed == 
+  0x149a1dc8   ffc300d1  sub       sp, sp, #0x30
+  0x149a1dcc   fd7b01a9  stp       x29, x30, [sp, #0x10]
+  0x149a1dd0   f31300f9  str       x19, [sp, #0x20]
+  0x149a1dd4   fd430091  add       x29, sp, #0x10
+  0x149a1dd8   e1230091  add       x1, sp, #8
+  0x149a1ddc   c0018052  mov       w0, #0xe
+  0x149a1de0   bf0f00f9  str       xzr, [x29, #0x18]
+  0x149a1de4   4defff97  bl        #0x1499db18
+  0x149a1de8   80010035  cbnz      w0, #0x149a1e18
+  0x149a1dec   e80740f9  ldr       x8, [sp, #8]
+  0x149a1df0   084d40a9  ldp       x8, x19, [x8]

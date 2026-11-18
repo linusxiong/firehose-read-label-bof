@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+# runtime state written by the oracle stages
+tools/cookie.bin
+tools/canary.bin
+# never commit vendor firmware
+prog_firehose_ddr.elf
+*.elf
+DigestsToSign_*.bin.mbn

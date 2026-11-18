@@ -1,0 +1,43 @@
+binary : prog_firehose_ddr.elf (not redistributed; see sha256)
+sha256 : 31ad5664023af3f9022913272e2c180fde5f658f31c9094ae9ec57c128c59086
+size   : 295636 bytes
+match  : exact
+build  : Jul 22 2025
+
+single-instruction scan at every 4-byte boundary
+
+mov w0,#1 ; ret            22 hit(s)
+      0x149a1e70
+      0x149a7710
+      0x149a945c
+      0x149ae6c4
+      0x149aeba8
+      0x149b5a5c
+      0x149b5de4
+      0x149b64e4
+      0x149b67bc
+      0x149b6a08
+      0x149b6b50
+      0x149b6b58
+      0x149b6bb8
+      0x149c6194
+      0x149c6244
+      0x149c8824
+      0x149cae94
+      0x149cb2c8
+      0x149cb3e8
+      0x149ccb04
+
+mov w0,#1 ; br xN          0 hit(s)
+
+mov w0,#1 ; blr xN         0 hit(s)
+
+mov sp,xN ; ret            0 hit(s)
+
+add sp,xN,#0 ; ret         0 hit(s)
+
+ldr x30,[sp,#imm] ; ret    0 hit(s)
+
+mov x0,x1 ; ret            2 hit(s)
+      0x149a97ac
+      0x149a97dc
